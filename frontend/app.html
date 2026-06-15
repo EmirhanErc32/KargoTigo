@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta name="color-scheme" content="light" />
+    <meta name="robots" content="noindex" />
+    <title>Uygulama | KargoTigo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="css/base.css?v=9" />
+    <link rel="stylesheet" href="css/components.css?v=8" />
+    <link rel="stylesheet" href="css/app.css?v=20" />
+    <link rel="stylesheet" href="css/consultant.css?v=8" />
+    <link rel="stylesheet" href="css/courier-map.css?v=7" />
+  </head>
+  <body class="app-page">
+    <header class="topbar">
+      <div class="container">
+        <a href="index.html" class="brand">
+          <span class="logo">T</span>
+          <span>KargoTigo</span>
+        </a>
+        <nav>
+          <button class="btn btn-sm btn-outline history-trigger" id="historyBtn" type="button" title="Geçmiş işlemler">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 1"/>
+            </svg>
+            Geçmiş
+          </button>
+          <span class="quota-pill hidden" id="quotaBadge">
+            <span id="quotaBadgeLabel">0/5 Hak</span>
+          </span>
+          <span class="user-pill">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="8" cy="6" r="3"/><path d="M2 15c0-3.3 2.7-6 6-6s6 2.7 6 6"/>
+            </svg>
+            <span id="userName">...</span>
+          </span>
+          <button class="btn btn-sm btn-ghost" id="logoutBtn">Çıkış</button>
+        </nav>
+      </div>
+    </header>
+    <script>
+      (function () {
+        try {
+          var userRaw = localStorage.getItem("kargotigo_user");
+          if (userRaw) {
+            var u = JSON.parse(userRaw);
+            var name = (u.fullName || u.full_name || "").trim();
+            var display = name || "...";
+            var userEl = document.getElementById("userName");
+            var welcomeEl = document.getElementById("welcomeName");
+            if (userEl) userEl.textContent = display;
+            if (welcomeEl) welcomeEl.textContent = display;
+          }
+          var raw = localStorage.getItem("kargotigo_quota");
+          if (!raw) return;
+          var q = JSON.parse(raw).quota;
+          if (!q || !q.limited || q.premium) return;
+          var el = document.getElementById("quotaBadge");
+          var label = document.getElementById("quotaBadgeLabel");
+          if (!el || !label) return;
+          el.classList.remove("hidden");
+          var rem = q.remaining || 0;
+          var lim = q.limit || 5;
+          label.textContent = rem > 0 ? rem + "/" + lim + " Hak" : "Beklemede";
+          el.classList.toggle("quota-warn", rem <= 0);
+        } catch (e) {}
+      })();
+    </script>
+
+    <main class="container page">
+      <!-- Hizmet Paneli -->
+      <section id="view-dashboard">
+        <div class="dash-hero dash-hero-v2">
+          <div class="dash-hero-text">
+            <span class="dash-eyebrow">Hoş geldiniz, <span id="welcomeName">...</span></span>
+            <h1>En Uygun <span class="dash-highlight">Kargo</span></h1>
+            <p>Kargo firmalarının fiyatlarını karşılaştırın. Ödeme doğrudan firmaya yapılır; kurye ve depo hizmetlerimiz KargoTigo üzerinden.</p>
+            <button class="btn btn-primary btn-lg dash-cta" data-service="ai-analiz" type="button">Fiyat Karşılaştır</button>
+          </div>
+          <button class="hero-feature hero-feature-compact" data-service="ai-analiz" type="button">
+            <div class="hero-feature-content">
+              <div class="hero-feature-top">
+                <span class="hero-feature-icon">🤖</span>
+                <span class="badge badge-ok">AI Analiz</span>
+              </div>
+              <h2>Fotoğrafla Analiz</h2>
+              <p>Otomatik ağırlık, boyut ve 11+ firmadan fiyat.</p>
+            </div>
+          </button>
+        </div>
+
+        <div class="dash-section-head">
+          <h2>Fiyat Karşılaştırma</h2>
+          <p class="muted">Tüm kargo seçenekleri — bilgi amaçlı tahmini fiyatlar</p>
+        </div>
+
+        <div class="service-grid compact">
+          <button class="service-card service-card-featured" data-service="ai-analiz" type="button">
+            <div class="svc-icon blue">📦</div>
+            <h3>En Uygun Kargo</h3>
+            <p>AI fotoğraf veya manuel giriş ile fiyat karşılaştırması.</p>
+            <span class="badge badge-ok">Ana Hizmet</span>
+          </button>
+
+          <button class="service-card" data-service="agir-kargo" type="button">
+            <div class="svc-icon navy">🚛</div>
+            <h3>Ağır Yük Kargo</h3>
+            <p>100 kg+, araç, motosiklet, palet — lojistik firmaları.</p>
+            <span class="badge">Fiyat</span>
+          </button>
+
+          <button class="service-card" data-service="toplu-kargo" type="button">
+            <div class="svc-icon green">📋</div>
+            <h3>Toplu Kargo</h3>
+            <p>Excel/manuel veya fotoğraf ile çoklu gönderi analizi.</p>
+            <span class="badge badge-ok">Hizmet</span>
+          </button>
+        </div>
+
+        <div class="dash-section-head" style="margin-top:32px">
+          <h2>KargoTigo Hizmetleri</h2>
+          <p class="muted">Doğrudan bizden satın alın — kurye ve depo</p>
+        </div>
+
+        <div class="service-grid compact">
+          <button class="service-card" data-service="sehir-ici" type="button">
+            <div class="svc-icon teal">🛵</div>
+            <h3>Şehir İçi Günlük Kargo</h3>
+            <p>Moto kurye, aynı gün teslimat ve ödeme.</p>
+            <span class="badge badge-ok">Hizmet</span>
+          </button>
+
+          <button class="service-card" data-service="depo-kiralama" type="button">
+            <div class="svc-icon purple">🏭</div>
+            <h3>Depo Kiralama</h3>
+            <p>Şehir bazlı depo ve fulfillment.</p>
+            <span class="badge badge-ok">Hizmet</span>
+          </button>
+
+          <button class="service-card" data-service="kargo-takip" type="button">
+            <div class="svc-icon orange">📦</div>
+            <h3>Sipariş Takibi</h3>
+            <p>Kurye ve depo siparişlerinizi takip edin.</p>
+            <span class="badge badge-ok">Aktif</span>
+          </button>
+
+          <button class="service-card" data-service="nakliyat" type="button">
+            <div class="svc-icon green">🚛</div>
+            <h3>Ev &amp; Ofis Taşıma</h3>
+            <p>Adım adım sihirbaz ile nakliyat fiyatı alın ve sipariş verin.</p>
+            <span class="badge badge-ok">Hizmet</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Nakliyat Wizard -->
+      <section id="view-nakliyat" class="hidden">
+        <div class="wizard-pro-top" style="margin-bottom:24px">
+          <button class="btn btn-ghost btn-sm" id="mvBackToDash" type="button">← Panele Dön</button>
+          <h2 style="margin:0;font-size:18px">Ev &amp; Ofis Taşıma</h2>
+        </div>
+        <div class="card card-pad" id="movingWizardContainer" style="max-width:600px;margin:0 auto"></div>
+      </section>
+
+      <!-- Toplu Kargo -->
+      <section id="view-toplu-kargo" class="hidden">
+        <div class="wizard-pro-top" style="margin-bottom:24px">
+          <button class="btn btn-ghost btn-sm svc-back" type="button">← Panele Dön</button>
+          <h2 style="margin:0;font-size:18px">📋 Toplu Kargo</h2>
+        </div>
+        <div id="topluContainer" style="max-width:720px;margin:0 auto"></div>
+      </section>
+
+      <!-- AI Analiz Sihirbazi -->
+      <section id="view-wizard" class="hidden">
+        <div class="wizard-pro">
+          <div class="wizard-pro-top">
+            <button class="btn btn-ghost btn-sm" id="backToDashboard" type="button">← Panele Dön</button>
+            <div class="wizard-pro-steps">
+              <div class="wizard-pro-step active" data-step="1"><span>1</span> Yükleme</div>
+              <div class="wizard-pro-step" data-step="2"><span>2</span> Analiz</div>
+              <div class="wizard-pro-step" data-step="3"><span>3</span> Fiyat</div>
+            </div>
+          </div>
+
+          <div class="wizard-pro-head card card-pad">
+            <div>
+              <span class="wizard-pro-tag">AI destekli</span>
+              <h1>En Uygun Kargo Fiyatı</h1>
+              <p>Ürün fotoğrafını yükleyin veya manuel girin — 11+ firmadan anında fiyat karşılaştırması alın.</p>
+            </div>
+            <div class="wizard-pro-quota muted" id="wizardQuotaHint"></div>
+          </div>
+
+        <section id="view-1" class="wizard-pro-body">
+          <div class="wizard-mode-tabs wizard-mode-tabs-pro">
+            <button class="wizard-mode-tab active" type="button" data-wmode="photo">📷 Fotoğraf ile</button>
+            <button class="wizard-mode-tab" type="button" data-wmode="manual">✏️ Manuel giriş</button>
+          </div>
+
+          <div id="manualPanel" class="card card-pad wizard-manual-card hidden">
+            <h3>Manuel ürün bilgisi</h3>
+            <p class="muted">Fotoğraf olmadan ağırlık ve boyut girerek fiyat alın — AI kotası harcanmaz.</p>
+            <div class="row row-2">
+              <div class="field"><label for="m_product">Ürün adı</label><input class="input" id="m_product" placeholder="Örn: Koli, buzdolabı" /></div>
+              <div class="field"><label for="m_weight">Ağırlık (kg)</label><input class="input" id="m_weight" type="number" step="0.1" min="0.1" /></div>
+            </div>
+            <div class="row row-3">
+              <div class="field"><label for="m_len">Uzunluk (cm)</label><input class="input" id="m_len" type="number" step="1" min="1" /></div>
+              <div class="field"><label for="m_wid">Genişlik (cm)</label><input class="input" id="m_wid" type="number" step="1" min="1" /></div>
+              <div class="field"><label for="m_hei">Yükseklik (cm)</label><input class="input" id="m_hei" type="number" step="1" min="1" /></div>
+            </div>
+            <button class="btn btn-primary" id="manualContinueBtn" type="button">Devam et</button>
+          </div>
+
+          <div id="photoPanel" class="wizard-pro-grid">
+            <div class="wizard-upload-card card">
+              <div class="dropzone dropzone-pro" id="dropzone">
+                <div class="dropzone-inner">
+                  <div class="upload-icon-wrap upload-icon-pro">📦</div>
+                  <h3>Fotoğrafı sürükleyin veya seçin</h3>
+                  <p class="dropzone-sub">AI ürünü tanır; ağırlık, boyut ve marka bilgilerini bulur</p>
+                  <button class="btn btn-primary upload-select-btn" type="button">Dosya Seç</button>
+                  <div class="dropzone-formats">
+                    <span>JPEG</span><span>PNG</span><span>WEBP</span>
+                    <span class="dropzone-max">Max 8 MB</span>
+                  </div>
+                </div>
+                <input type="file" id="fileInput" accept="image/*" class="hidden" />
+              </div>
+
+              <div class="preview hidden" id="preview">
+                <div class="preview-image-wrap preview-image-pro">
+                  <img id="previewImg" alt="önizleme" />
+                  <button class="preview-change" id="resetUpload" type="button">Değiştir</button>
+                </div>
+                <div class="preview-form">
+                  <div class="preview-ready">
+                    <span class="preview-check">✓</span>
+                    <div>
+                      <strong>Görsel hazır</strong>
+                      <p class="muted">İpucu ekleyerek analizi hızlandırabilirsiniz</p>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label for="hint">Ürün ipucu <span class="label-opt">(opsiyonel)</span></label>
+                    <input class="input" id="hint" placeholder="Örn: Siemens bulaşık makinesi SN23IC62MT" />
+                  </div>
+                  <button class="btn btn-primary btn-block btn-lg analyze-cta" id="analyzeBtn" type="button">
+                    AI ile Analiz Et
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <aside class="wizard-side-pro">
+              <div class="card card-pad wizard-side-block">
+                <h4>Nasıl çalışır?</h4>
+                <ol class="how-list how-list-pro">
+                  <li><span class="how-num">1</span><div><strong>Fotoğraf yükle</strong><span>Net bir ürün görseli seçin</span></div></li>
+                  <li><span class="how-num">2</span><div><strong>AI analiz eder</strong><span>Ağırlık, boyut, marka</span></div></li>
+                  <li><span class="how-num">3</span><div><strong>Fiyat karşılaştır</strong><span>11+ firmadan teklif</span></div></li>
+                </ol>
+              </div>
+              <div class="card card-pad wizard-tip-pro">
+                <span class="tip-icon">💡</span>
+                <p>Marka veya model ipucu yazarsanız AI daha hızlı ve doğru sonuç verir.</p>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section id="view-2" class="hidden">
+          <div id="analysisResult"></div>
+          <div id="sourcesBox" style="margin-top: 20px"></div>
+          <div class="actions">
+            <button class="btn btn-primary" id="confirmBtn">Onayla ve Kargo Sec</button>
+            <button class="btn btn-outline" id="backTo1">Geri</button>
+          </div>
+        </section>
+
+        <section id="view-3" class="hidden">
+          <div class="card card-pad">
+            <h3 style="font-size:18px;font-weight:700;color:var(--navy);margin-bottom:4px">Guzergah Bilgileri</h3>
+            <p class="muted" style="margin-bottom:20px;font-size:14px">Çıkış ve varış noktalarını belirleyin.</p>
+            <div class="row row-2">
+              <div class="field">
+                <label for="origin">Çıkış Şehri</label>
+                <input class="input" id="origin" placeholder="Şehir ara…" autocomplete="off" />
+              </div>
+              <div class="field">
+                <label for="destination">Varış Şehri</label>
+                <input class="input" id="destination" placeholder="Şehir ara…" autocomplete="off" />
+              </div>
+            </div>
+            <datalist id="cityList"></datalist>
+            <div class="field">
+              <label for="distance">Mesafe (km) — bos birak otomatik hesaplansin</label>
+              <input class="input" id="distance" type="number" min="0" placeholder="Otomatik" />
+            </div>
+            <div class="actions" style="margin-top:0">
+              <button class="btn btn-primary" id="quoteBtn">Fiyat Hesapla</button>
+              <button class="btn btn-outline" id="backTo2">Geri</button>
+            </div>
+          </div>
+
+          <div id="shippingResult" style="margin-top: 24px"></div>
+          <div class="actions" id="restartActions" style="display: none">
+            <button class="btn btn-accent" id="restartBtn">Panele Dön</button>
+          </div>
+        </section>
+        </div>
+      </section>
+
+      <!-- Şehir İçi Kurye — İstanbul Haritası -->
+      <section id="view-courier" class="hidden svc-view">
+        <div class="wizard-toolbar">
+          <button class="btn btn-outline btn-sm svc-back" type="button">← Panele Don</button>
+          <button class="btn btn-sm btn-outline" id="courierQueryToggle" type="button">🔍 Gönderi Sorgula</button>
+        </div>
+
+        <!-- Gönderi Sorgula Paneli -->
+        <div id="courierQueryPanel" class="hidden">
+          <div class="cq-hero">
+            <div class="cq-hero-icon">🔍</div>
+            <div class="cq-hero-text">
+              <h2>Gönderi Sorgula</h2>
+              <p>Takip numaranızı girerek kargonuzun anlık durumunu öğrenin</p>
+            </div>
+          </div>
+          <div class="cq-search-wrap">
+            <div class="cq-search-box">
+              <span class="cq-search-prefix">📦</span>
+              <input class="cq-search-input" id="courierQueryInput" placeholder="Takip numarasını girin… (örn: KG6HS8ZYA)" autocomplete="off" />
+              <button class="cq-search-btn" id="courierQueryBtn" type="button">Sorgula →</button>
+            </div>
+          </div>
+          <div id="courierQueryResult"></div>
+          <div id="courierQueryMap" style="width:100%;height:400px;border-radius:16px;overflow:hidden;display:none;margin-top:20px;box-shadow:0 4px 20px rgba(0,0,0,.12)"></div>
+        </div>
+
+        <div class="courier-flow" id="courierMainFlow">
+          <div class="courier-steps-bar">
+            <div class="courier-flow-step active" data-cstep="1"><span>1.</span> Nokta Sec</div>
+            <div class="courier-flow-step" data-cstep="2"><span>2.</span> Bilgiler</div>
+            <div class="courier-flow-step" data-cstep="3"><span>3.</span> Ödeme</div>
+            <div class="courier-flow-step" data-cstep="4"><span>4.</span> Teslim Şifresi</div>
+          </div>
+
+          <!-- Adım 1: Harita -->
+          <div id="courierStep1">
+            <div class="courier-map-wrap">
+              <div id="courierMap"></div>
+              <div class="courier-map-side">
+                <div class="courier-limits" id="courierLimitsText">Yükleniyor...</div>
+                <div class="point-pick pickup">
+                  <label>Alim Noktası</label>
+                  <div id="courierPickupLabel"><span class="muted">Haritadan seçin (yesil A)</span></div>
+                </div>
+                <div class="point-pick delivery">
+                  <label>Teslim Noktası</label>
+                  <div id="courierDeliveryLabel"><span class="muted">Haritadan seçin (kirmizi T)</span></div>
+                </div>
+                <div class="courier-distance">
+                  <span class="muted">Mesafe</span>
+                  <strong id="courierDistanceVal">—</strong>
+                  <span class="muted">km (max 25)</span>
+                </div>
+                <button class="btn btn-outline btn-sm btn-block courier-clear-btn hidden" id="courierClearSelection" type="button">
+                  Seçimleri Kaldır
+                </button>
+                <div class="row row-2" style="gap:8px">
+                  <div class="field" style="margin:0">
+                    <label for="courierWeight">kg</label>
+                    <input class="input" id="courierWeight" type="number" min="0.1" max="15" step="0.1" value="5" />
+                  </div>
+                  <div class="field" style="margin:0">
+                    <label>Boyut (cm)</label>
+                    <div style="display:flex;gap:4px">
+                      <input class="input" id="courierLength" type="number" min="1" max="35" value="30" placeholder="U" style="padding:8px" />
+                      <input class="input" id="courierWidth" type="number" min="1" max="30" value="30" placeholder="G" style="padding:8px" />
+                      <input class="input" id="courierHeight" type="number" min="1" max="35" value="30" placeholder="Y" style="padding:8px" />
+                    </div>
+                  </div>
+                </div>
+                <button class="btn btn-primary btn-block" id="courierToForm" type="button" disabled>Devam Et</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Adım 2: Bilgiler -->
+          <div id="courierStep2" class="hidden">
+            <div class="courier-form-grid">
+              <div class="card card-pad">
+                <h3 class="svc-card-title">Gönderici</h3>
+                <div class="field">
+                  <label for="courierSenderName">Ad Soyad</label>
+                  <input class="input" id="courierSenderName" placeholder="Gönderen adı" />
+                </div>
+                <div class="field">
+                  <label for="courierSenderPhone">Telefon</label>
+                  <input class="input" id="courierSenderPhone" type="tel" placeholder="05XX XXX XX XX" maxlength="11" />
+                </div>
+                <div class="field">
+                  <label for="courierSenderTc">TC Kimlik No</label>
+                  <input class="input" id="courierSenderTc" placeholder="11 haneli" maxlength="11" />
+                </div>
+              </div>
+              <div class="card card-pad">
+                <h3 class="svc-card-title">Alıcı</h3>
+                <div class="field">
+                  <label for="courierRecipientName">Ad Soyad</label>
+                  <input class="input" id="courierRecipientName" placeholder="Alıcı adı" />
+                </div>
+                <div class="field">
+                  <label for="courierRecipientPhone">Telefon</label>
+                  <input class="input" id="courierRecipientPhone" type="tel" placeholder="05XX XXX XX XX" maxlength="11" />
+                </div>
+                <div class="field">
+                  <label for="courierRecipientTc">TC Kimlik No</label>
+                  <input class="input" id="courierRecipientTc" placeholder="11 haneli" maxlength="11" />
+                </div>
+              </div>
+            </div>
+            <div class="card card-pad" style="margin-top:16px">
+              <div class="field" style="margin:0">
+                <label for="courierDesc">Paket açıklaması (opsiyonel)</label>
+                <input class="input" id="courierDesc" placeholder="Örn: Evrak zarf, küçük koli" />
+              </div>
+            </div>
+            <div class="actions" style="margin-top:20px">
+              <button class="btn btn-outline" type="button" id="courierBackToMap">Geri</button>
+              <button class="btn btn-primary" id="courierToPayment" type="button">Ödeme Adımına Geç</button>
+            </div>
+          </div>
+
+          <!-- Adım 3: Ödeme -->
+          <div id="courierStep3" class="hidden">
+            <div class="payment-box card card-pad">
+              <h3 class="svc-card-title">Ödeme Özeti</h3>
+              <div class="payment-summary" id="paymentSummary"></div>
+              <div class="payment-card-mock">
+                <div class="field">
+                  <label>Kart uzerindeki isim</label>
+                  <input class="input" id="courierCardName" placeholder="AD SOYAD" />
+                </div>
+                <div class="field">
+                  <label>Kart numarasi</label>
+                  <input class="input" id="courierCardNo" placeholder="0000 0000 0000 0000" maxlength="19" />
+                </div>
+                <div class="row row-2">
+                  <div class="field">
+                    <label>SKT</label>
+                    <input class="input" id="courierCardExp" placeholder="AA/YY" maxlength="5" />
+                  </div>
+                  <div class="field">
+                    <label>CVV</label>
+                    <input class="input" id="courierCardCvv" placeholder="***" maxlength="3" type="password" />
+                  </div>
+                </div>
+                <p class="muted" style="font-size:12px;margin-bottom:16px">Demo ödeme — gerçek tahsilat yapılmaz.</p>
+                <button class="btn btn-primary btn-block btn-lg" id="courierPayBtn" type="button">Ödemeyi Tamamla</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Adım 4: Teslim şifresi -->
+          <div id="courierStep4" class="hidden">
+            <div class="card card-pad">
+              <div class="delivery-code-box">
+                <h3>Teslim Şifreleri</h3>
+                <p>Kurye paketi alırken ve alıcı teslim alırken bu şifreler kullanılır.</p>
+                <div class="courier-codes-grid">
+                  <div class="courier-code-card">
+                    <span class="muted">Alım şifresi (kurye teslim alırken)</span>
+                    <div class="code" id="courierPickupCode">——</div>
+                  </div>
+                  <div class="courier-code-card">
+                    <span class="muted">Teslim şifresi (alıcıya verilirken)</span>
+                    <div class="code" id="courierDeliveryCode">——</div>
+                  </div>
+                </div>
+                <p>Takip no: <strong id="courierTrackingNo2"></strong></p>
+              </div>
+              <button class="btn btn-accent btn-block" id="courierReset" type="button" style="margin-top:20px">Yeni Gönderi Oluştur</button>
+            </div>
+          </div>
+        </div><!-- /.courier-flow / #courierMainFlow -->
+      </section>
+
+      <!-- Kargo Takip -->
+      <section id="view-tracking" class="hidden svc-view">
+        <div class="wizard-toolbar">
+          <button class="btn btn-outline btn-sm svc-back" type="button">← Panele Don</button>
+        </div>
+
+        <div id="carrierTrackGrid" class="track-carriers-wrap"></div>
+      </section>
+
+      <!-- Depo Kiralama -->
+      <section id="view-warehouse" class="hidden svc-view">
+        <div class="wizard-toolbar">
+          <button class="btn btn-outline btn-sm svc-back" type="button">← Panele Don</button>
+        </div>
+        <div class="svc-hero svc-hero-purple">
+          <span class="svc-hero-icon">🏭</span>
+          <div>
+            <h1>Depo Kiralama</h1>
+            <p>İstanbul genelinde 30 depo — konumunuza en yakın depoyu bulun, anında fiyat alın</p>
+          </div>
+        </div>
+
+        <div class="wh-wizard">
+          <div class="wh-steps" id="whSteps">
+            <div class="wh-step active" data-step="1"><span>1</span> Ürün & Konum</div>
+            <div class="wh-step" data-step="2"><span>2</span> Depo & Fiyat</div>
+            <div class="wh-step" data-step="3"><span>3</span> Bilgiler</div>
+            <div class="wh-step" data-step="4"><span>4</span> Ödeme</div>
+            <div class="wh-step" data-step="5"><span>5</span> Tamamlandi</div>
+          </div>
+
+          <!-- Adım 1 -->
+          <div id="whStep1" class="wh-step-panel">
+            <div class="wh-step-grid">
+              <div class="card card-pad">
+                <h3 class="wh-panel-title">📍 Konumunuz</h3>
+                <p class="muted wh-panel-sub">GPS ile otomatik veya manuel adres girin</p>
+                <button class="btn btn-primary btn-block" id="whUseGps" type="button">📡 Konumumu Kullan</button>
+                <p class="wh-or">veya manuel girin</p>
+                <div class="field">
+                  <label for="whManualAddress">Adres / Ilce</label>
+                  <input class="input" id="whManualAddress" placeholder="Örn: Kadıköy, İstanbul" />
+                </div>
+                <div class="row row-2">
+                  <div class="field">
+                    <label for="whManualLat">Enlem (opsiyonel)</label>
+                    <input class="input" id="whManualLat" type="number" step="any" placeholder="41.01" />
+                  </div>
+                  <div class="field">
+                    <label for="whManualLng">Boylam (opsiyonel)</label>
+                    <input class="input" id="whManualLng" type="number" step="any" placeholder="28.97" />
+                  </div>
+                </div>
+                <div id="whLocationStatus" class="wh-location-status muted"></div>
+              </div>
+
+              <div class="card card-pad">
+                <h3 class="wh-panel-title">📦 Ürün Bilgileri</h3>
+                <p class="muted wh-panel-sub">Ürününüzün ölçülerini girin</p>
+
+                <div class="row row-3">
+                  <div class="field">
+                    <label for="whWeight">Ağırlık (kg) <span class="muted" style="font-weight:400">· maks. 100</span></label>
+                    <input class="input" id="whWeight" type="number" min="0.1" max="100" step="0.1" placeholder="Örn: 25" />
+                  </div>
+                  <div class="field">
+                    <label for="whLength">Uzunluk (cm)</label>
+                    <input class="input" id="whLength" type="number" min="1" placeholder="Örn: 120" />
+                  </div>
+                  <div class="field">
+                    <label for="whWidth">Genislik (cm)</label>
+                    <input class="input" id="whWidth" type="number" min="1" placeholder="Örn: 80" />
+                  </div>
+                </div>
+                <div class="row row-2">
+                  <div class="field">
+                    <label for="whHeight">Yükseklik (cm)</label>
+                    <input class="input" id="whHeight" type="number" min="1" placeholder="Örn: 100" />
+                  </div>
+                  <div class="field">
+                    <label for="whStorageDays">Depolama süresi (gun)</label>
+                    <input class="input" id="whStorageDays" type="number" min="1" value="30" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="wh-actions">
+              <button class="btn btn-primary btn-lg" id="whToStep2" type="button">En Yakın Depoyu Bul →</button>
+            </div>
+          </div>
+
+          <!-- Adım 2 -->
+          <div id="whStep2" class="wh-step-panel hidden">
+            <div class="wh-step-grid">
+              <div class="card card-pad wh-nearest-card" id="whNearestCard"></div>
+              <div class="card card-pad">
+                <h3 class="wh-panel-title">💰 Fiyat Detayi</h3>
+                <div id="whPricingBreakdown" class="wh-pricing-breakdown"></div>
+              </div>
+            </div>
+            <div class="wh-actions">
+              <button class="btn btn-outline" id="whBack1" type="button">← Geri</button>
+              <button class="btn btn-primary btn-lg" id="whToStep3" type="button">Bilgileri Gir →</button>
+            </div>
+          </div>
+
+          <!-- Adım 3 -->
+          <div id="whStep3" class="wh-step-panel hidden">
+            <div class="card card-pad wh-form-card">
+              <h3 class="wh-panel-title">👤 Kisisel Bilgiler</h3>
+              <p class="muted wh-panel-sub">Depo sozlesmesi ve fatura için gerekli bilgiler</p>
+              <div class="row row-2">
+                <div class="field">
+                  <label for="whFirstName">Ad</label>
+                  <input class="input" id="whFirstName" placeholder="Adiniz" />
+                </div>
+                <div class="field">
+                  <label for="whLastName">Soyad</label>
+                  <input class="input" id="whLastName" placeholder="Soyadiniz" />
+                </div>
+              </div>
+              <div class="row row-2">
+                <div class="field">
+                  <label for="whTcNo">TC Kimlik No</label>
+                  <input class="input" id="whTcNo" maxlength="11" placeholder="11 haneli" />
+                </div>
+                <div class="field">
+                  <label for="whPhone">Telefon</label>
+                  <input class="input" id="whPhone" placeholder="05XX XXX XX XX" />
+                </div>
+              </div>
+              <div class="field">
+                <label for="whEmail">E-posta</label>
+                <input class="input" id="whEmail" type="email" placeholder="ornek@email.com" />
+              </div>
+              <div class="field">
+                <label for="whPersonalAddress">Kisisel Adres</label>
+                <textarea class="input" id="whPersonalAddress" rows="2" placeholder="Fatura adresi"></textarea>
+              </div>
+              <div class="field">
+                <label for="whNotes">Not (opsiyonel)</label>
+                <textarea class="input" id="whNotes" rows="2" placeholder="Ozel istekleriniz..."></textarea>
+              </div>
+            </div>
+            <div class="wh-actions">
+              <button class="btn btn-outline" id="whBack2" type="button">← Geri</button>
+              <button class="btn btn-primary btn-lg" id="whToStep4" type="button">Ödemeye Geç →</button>
+            </div>
+          </div>
+
+          <!-- Adım 4 -->
+          <div id="whStep4" class="wh-step-panel hidden">
+            <div class="payment-box card card-pad">
+              <h3 class="wh-panel-title">💳 Ödeme</h3>
+              <div id="whPaymentSummary" class="payment-summary"></div>
+              <div class="payment-card-mock">
+                <div class="field">
+                  <label>Kart uzerindeki isim</label>
+                  <input class="input" id="whCardName" placeholder="AD SOYAD" />
+                </div>
+                <div class="field">
+                  <label>Kart numarasi</label>
+                  <input class="input" id="whCardNo" placeholder="0000 0000 0000 0000" maxlength="19" />
+                </div>
+                <div class="row row-2">
+                  <div class="field">
+                    <label>SKT</label>
+                    <input class="input" id="whCardExp" placeholder="AA/YY" maxlength="5" />
+                  </div>
+                  <div class="field">
+                    <label>CVV</label>
+                    <input class="input" id="whCardCvv" placeholder="***" maxlength="3" />
+                  </div>
+                </div>
+                <p class="muted" style="font-size:12px;margin-bottom:16px">Demo ödeme — gerçek tahsilat yapılmaz.</p>
+                <button class="btn btn-primary btn-block btn-lg" id="whPayBtn" type="button">Ödemeyi Tamamla</button>
+              </div>
+            </div>
+            <div class="wh-actions">
+              <button class="btn btn-outline" id="whBack3" type="button">← Geri</button>
+            </div>
+          </div>
+
+          <!-- Adım 5 -->
+          <div id="whStep5" class="wh-step-panel hidden">
+            <div class="wh-success-grid">
+              <div class="card card-pad wh-success-card">
+                <div class="wh-success-icon">✅</div>
+                <h3>Rezervasyon Tamamlandi!</h3>
+                <p class="muted">Ödemeniz alındı. Depo erişim şifreleriniz aşağıdadır.</p>
+                <div class="wh-password-box entry">
+                  <span class="wh-pw-label">Depo Giriş Şifresi</span>
+                  <span class="wh-pw-hint">Ürünü depoya teslim ederken kullanın</span>
+                  <div class="code" id="whEntryPassword">000000</div>
+                </div>
+                <div class="wh-password-box exit">
+                  <span class="wh-pw-label">Depo Çıkış Şifresi</span>
+                  <span class="wh-pw-hint">Ürünü depodan teslim alırken kullanın</span>
+                  <div class="code" id="whExitPassword">000000</div>
+                </div>
+              </div>
+              <div class="card card-pad">
+                <h3 class="wh-panel-title">🧾 E-Fatura</h3>
+                <p class="muted" style="margin-bottom:16px">Faturanizi PDF olarak indirebilirsiniz.</p>
+                <p>Fatura No: <strong id="whInvoiceNo">—</strong></p>
+                <div class="wh-actions" style="margin-top:20px">
+                  <button class="btn btn-primary" id="whDownloadInvoice" type="button">PDF Indir</button>
+                  <button class="btn btn-outline" id="whViewInvoice" type="button">Faturayi Goruntule</button>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-accent btn-block" id="whReset" type="button" style="margin-top:24px">Yeni Rezervasyon</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Ağır Yük Kargo -->
+      <section id="view-heavy" class="hidden svc-view">
+        <div class="wizard-toolbar">
+          <button class="btn btn-outline btn-sm svc-back" type="button">← Panele Don</button>
+        </div>
+        <div class="svc-hero svc-hero-navy">
+          <span class="svc-hero-icon">🚛</span>
+          <div>
+            <h1>Ağır Yük Kargo</h1>
+            <p>Lojistik firmalarının tahmini fiyatlarını karşılaştırın — gönderi firmaya aittir</p>
+          </div>
+        </div>
+
+        <div class="heavy-type-grid" id="heavyTypeGrid"></div>
+
+        <div class="row row-2" style="margin-top:20px;align-items:start">
+          <div class="card card-pad">
+            <h3 class="svc-card-title">Ürün ve Yük Bilgileri</h3>
+            <div class="field">
+              <label for="heavyProductTitle">Ürün / Yük Başlığı</label>
+              <input class="input" id="heavyProductTitle" placeholder="Örn: CNC tezgahı, BMW 320i, 3 palet seramik" />
+            </div>
+            <div class="field">
+              <label for="heavyProductDesc">Detayli Aciklama</label>
+              <textarea class="input" id="heavyProductDesc" rows="3" placeholder="Malzeme, ambalaj durumu, ozel gereksinimler..."></textarea>
+            </div>
+            <div class="row row-2 heavy-vehicle-fields hidden">
+              <div class="field">
+                <label for="heavyBrand">Marka</label>
+                <input class="input" id="heavyBrand" placeholder="Örn: Honda, BMW" />
+              </div>
+              <div class="field">
+                <label for="heavyModel">Model</label>
+                <input class="input" id="heavyModel" placeholder="Örn: Civic, 320i" />
+              </div>
+            </div>
+            <div class="row row-2 heavy-car-fields hidden">
+              <div class="field">
+                <label for="heavyYear">Model Yili</label>
+                <input class="input" id="heavyYear" type="number" min="1980" max="2030" placeholder="2020" />
+              </div>
+              <div class="field">
+                <label for="heavyPlate">Plaka</label>
+                <input class="input" id="heavyPlate" placeholder="34 ABC 123" />
+              </div>
+            </div>
+            <div class="field heavy-pallet-fields hidden">
+              <label for="heavyQuantity">Palet Adedi</label>
+              <input class="input" id="heavyQuantity" type="number" min="1" value="1" />
+            </div>
+            <div class="row row-2">
+              <div class="field">
+                <label for="heavyWeight">Ağırlık (kg)</label>
+                <input class="input" id="heavyWeight" type="number" min="100" step="1" placeholder="Min 100 kg" />
+              </div>
+              <div class="field">
+                <label for="heavyPickupDate">Tahmini Alim Tarihi</label>
+                <input class="input" id="heavyPickupDate" type="date" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Boyutlar (cm) — U x G x Y</label>
+              <div class="row row-3">
+                <input class="input" id="heavyLength" type="number" min="1" placeholder="Uzunluk" />
+                <input class="input" id="heavyWidth" type="number" min="1" placeholder="Genislik" />
+                <input class="input" id="heavyHeight" type="number" min="1" placeholder="Yükseklik" />
+              </div>
+            </div>
+            <div class="heavy-checks">
+              <label><input type="checkbox" id="heavyIsRunning" /> Çalışır durumda</label>
+              <label><input type="checkbox" id="heavyFragile" /> Kirilabilir / hassas</label>
+              <label><input type="checkbox" id="heavyLoadingHelp" /> Yükleme/boşaltma desteği gerekli</label>
+            </div>
+            <div class="field">
+              <label for="heavyNotes">Ek Notlar</label>
+              <input class="input" id="heavyNotes" placeholder="Vin numarasi, rampa ihtiyaci vb." />
+            </div>
+          </div>
+
+          <div class="card card-pad">
+            <h3 class="svc-card-title">Rota ve İletişim</h3>
+            <div class="row row-2">
+              <div class="field">
+                <label for="heavyOrigin">Çıkış Şehri</label>
+                <input class="input" id="heavyOrigin" placeholder="Şehir ara…" autocomplete="off" value="İstanbul" />
+              </div>
+              <div class="field">
+                <label for="heavyDestination">Varış Şehri</label>
+                <input class="input" id="heavyDestination" placeholder="Şehir ara…" autocomplete="off" />
+              </div>
+            </div>
+            <datalist id="cityListHeavy"></datalist>
+            <div class="row row-2">
+              <div class="field">
+                <label for="heavySenderName">Gönderici Ad Soyad</label>
+                <input class="input" id="heavySenderName" />
+              </div>
+              <div class="field">
+                <label for="heavySenderPhone">Gönderici Telefon</label>
+                <input class="input" id="heavySenderPhone" placeholder="05XX XXX XX XX" />
+              </div>
+            </div>
+            <div class="row row-2">
+              <div class="field">
+                <label for="heavyRecipientName">Alıcı Ad Soyad</label>
+                <input class="input" id="heavyRecipientName" />
+              </div>
+              <div class="field">
+                <label for="heavyRecipientPhone">Alıcı Telefon</label>
+                <input class="input" id="heavyRecipientPhone" placeholder="05XX XXX XX XX" />
+              </div>
+            </div>
+            <div id="heavyReqBox" style="margin-top:16px"></div>
+            <button class="btn btn-primary btn-block" id="heavyQuoteBtn" type="button" style="margin-top:16px">Tasima Teklifi Al</button>
+          </div>
+        </div>
+
+        <div id="heavyQuoteResult" style="margin-top:20px"></div>
+      </section>
+    </main>
+
+    <div id="historyPanel" class="history-panel hidden" aria-hidden="true">
+      <div class="history-backdrop" id="historyBackdrop"></div>
+      <aside class="history-drawer" role="dialog" aria-labelledby="historyTitle">
+        <header class="history-header">
+          <div>
+            <h2 id="historyTitle">Geçmiş İşlemler</h2>
+            <p class="history-sub">Depo, sorgu ve kurye kayıtlarınız</p>
+          </div>
+          <button class="btn btn-sm btn-ghost history-close" id="historyCloseBtn" type="button" aria-label="Kapat">&times;</button>
+        </header>
+        <div class="history-tabs" role="tablist">
+          <button class="history-tab active" data-tab="warehouses" type="button" title="Depo İşlemleri">
+            Depo <span class="history-tab-count"></span>
+          </button>
+          <button class="history-tab" data-tab="queries" type="button" title="Sorgu Geçmişi">
+            Sorgu <span class="history-tab-count"></span>
+          </button>
+          <button class="history-tab" data-tab="courier" type="button" title="Kurye Gönderileri">
+            Kurye <span class="history-tab-count"></span>
+          </button>
+          <button class="history-tab" data-tab="moving" type="button" title="Nakliyat Siparişleri">
+            Nakliyat <span class="history-tab-count"></span>
+          </button>
+        </div>
+        <div class="history-body" id="historyContent"></div>
+      </aside>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script type="module" src="js/app.js?v=29"></script>
+  </body>
+</html>

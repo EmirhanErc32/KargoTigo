@@ -1,0 +1,306 @@
+/* Sanal Danisman — kompakt sag alt chat widget */
+
+#consultant-root {
+  position: fixed;
+  inset: 0;
+  z-index: 350;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.consultant-fab,
+.consultant-panel {
+  pointer-events: auto;
+}
+
+.consultant-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 350;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--blue), var(--navy));
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 22px rgba(30, 94, 255, 0.4);
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .consultant-fab {
+    animation: kt-fade-in-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
+  }
+}
+.consultant-fab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(30, 94, 255, 0.45);
+}
+.consultant-fab .fab-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  display: grid;
+  place-items: center;
+  font-size: 16px;
+}
+.consultant-fab.open {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.92);
+}
+
+.consultant-panel {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 360;
+  width: 340px;
+  height: 460px;
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 16px 48px rgba(12, 30, 53, 0.18);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px) scale(0.96);
+  transition: opacity 0.22s, transform 0.22s;
+}
+.consultant-panel.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.consultant-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, var(--navy), var(--navy-700));
+  color: #fff;
+  flex-shrink: 0;
+}
+.consultant-header-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.consultant-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.consultant-header h3 {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.consultant-header .status {
+  font-size: 11px;
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 2px;
+}
+.consultant-header .status .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+}
+.consultant-close {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 16px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.consultant-close:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.consultant-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #f0f2f6;
+}
+
+.consultant-msg {
+  display: flex;
+  flex-direction: column;
+  max-width: 88%;
+}
+.consultant-msg.bot {
+  align-self: flex-start;
+}
+.consultant-msg.user {
+  align-self: flex-end;
+}
+.consultant-msg .meta {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+  padding: 0 4px;
+}
+.consultant-msg.user .meta {
+  text-align: right;
+}
+.consultant-bubble {
+  padding: 10px 13px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  border-radius: 14px;
+}
+.consultant-msg.bot .consultant-bubble {
+  background: var(--bg-white);
+  color: var(--text);
+  border-top-left-radius: 4px;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+.consultant-msg.user .consultant-bubble {
+  background: var(--blue);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.consultant-bubble strong {
+  color: var(--navy);
+  font-weight: 600;
+}
+.consultant-msg.user .consultant-bubble strong {
+  color: #fff;
+}
+
+/* Yaziyor animasyonu */
+.consultant-typing {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  border-top-left-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+.consultant-typing .typing-dots {
+  display: flex;
+  gap: 4px;
+}
+.consultant-typing .typing-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  animation: typingBounce 1.2s infinite;
+}
+.consultant-typing .typing-dots span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.consultant-typing .typing-dots span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.consultant-typing .typing-label {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+@keyframes typingBounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+.consultant-footer {
+  flex-shrink: 0;
+  border-top: 1px solid var(--border);
+  background: var(--bg-white);
+  padding: 10px 10px 12px;
+}
+.consultant-country select {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 11px;
+  font-family: inherit;
+  color: var(--text-secondary);
+  background: var(--surface-2);
+  cursor: pointer;
+  outline: none;
+  margin-bottom: 8px;
+}
+.consultant-chips {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+.consultant-chips::-webkit-scrollbar {
+  display: none;
+}
+.consultant-chip {
+  flex-shrink: 0;
+  padding: 6px 11px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.consultant-chip:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+  background: rgba(30, 94, 255, 0.06);
+}
+
+@media (max-width: 400px) {
+  .consultant-panel {
+    right: 10px;
+    bottom: 10px;
+    width: calc(100vw - 20px);
+    height: min(460px, calc(100vh - 80px));
+  }
+  .consultant-fab .fab-label {
+    display: none;
+  }
+}

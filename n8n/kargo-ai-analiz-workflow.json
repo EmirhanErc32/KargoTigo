@@ -1,0 +1,99 @@
+{
+  "name": "KargoTigo - Gorsel Analiz",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## KARGO AI\n\n1. Webhook fotograf alir\n2. Gemini analiz eder (503 olursa yedek model)\n3. JSON dondurur\n\nModel: gemini-2.5-flash (yedek: flash-latest)",
+        "height": 180,
+        "width": 300,
+        "color": 4
+      },
+      "id": "note-1",
+      "name": "Bilgi",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        200,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "kargo-analiz",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-1",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        460,
+        300
+      ],
+      "webhookId": "kargo-analiz-webhook"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "const inp = $input.first().json;\nconst body = inp.body || inp;\n\n// Google AI Studio API key\nconst apiKey = 'BURAYA_GEMINI_API_KEY_GIRIN';\nfunction fail(notes) {\n  return {\n    product_name: null, brand: null, model: null, category: null,\n    weight_kg: null, length_cm: null, width_cm: null, height_cm: null,\n    confidence: 0, notes, sources: [], error: true\n  };\n}\n\nfunction parseJson(text) {\n  if (!text) return null;\n  const fence = String(text).match(/```(?:json)?\\s*([\\s\\S]*?)```/i);\n  let c = fence ? fence[1] : String(text);\n  const s = c.indexOf('{'), e = c.lastIndexOf('}');\n  if (s !== -1 && e !== -1) c = c.slice(s, e + 1);\n  try { return JSON.parse(c); } catch { return null; }\n}\n\nfunction extractText(res) {\n  return res?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('\\n').trim() || '';\n}\n\nfunction extractSources(res) {\n  const chunks = res?.candidates?.[0]?.groundingMetadata?.groundingChunks || [];\n  const seen = new Set();\n  return chunks.map(c => c.web).filter(Boolean).map(w => ({\n    title: w.title || w.uri, uri: w.uri\n  })).filter(s => { if (seen.has(s.uri)) return false; seen.add(s.uri); return true; });\n}\n\nasync function callGemini(parts) {\n  const models = ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-2.5-flash-lite'];\n  let lastErr = null;\n  for (const model of models) {\n    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;\n    for (let i = 0; i < 2; i++) {\n      try {\n        return await this.helpers.httpRequest({\n          method: 'POST', url,\n          body: {\n            contents: [{ role: 'user', parts }],\n            tools: [{ google_search: {} }],\n            generationConfig: { temperature: 0.2, maxOutputTokens: 2048 }\n          },\n          json: true\n        });\n      } catch (err) {\n        lastErr = err;\n        const msg = err.message || String(err);\n        const retry = msg.includes('429') || msg.includes('503') || msg.includes('UNAVAILABLE') || msg.includes('RESOURCE_EXHAUSTED');\n        if (retry && i < 1) { await new Promise(r => setTimeout(r, 2000)); continue; }\n        if (retry) break;\n        if (msg.includes('400') || msg.includes('401') || msg.includes('403') || msg.includes('API key')) {\n          throw new Error('Gemini API key gecersiz. https://aistudio.google.com/app/apikey adresinden yeni key alin.');\n        }\n        throw err;\n      }\n    }\n  }\n  if (lastErr) {\n    const msg = lastErr.message || String(lastErr);\n    if (msg.includes('429') || msg.includes('quota')) throw new Error('Gemini API kotasi doldu. 1-2 dakika bekleyip tekrar deneyin.');\n    if (msg.includes('503') || msg.includes('UNAVAILABLE')) throw new Error('Gemini su an yogun (503). 1-2 dakika bekleyip tekrar deneyin.');\n    throw lastErr;\n  }\n}\n\ntry {\n  if (!body.image) return [{ json: fail('Gorsel verisi bulunamadi.') }];\n\n  const hint = body.hint || '';\n  const mime = body.mimeType || 'image/jpeg';\n\n  const prompt = `Sen lojistik urun analiz uzmanisin.\n\nGOREV:\n1) Fotograftaki urunu tani (ad, marka, model, kategori)\n2) Google aramasi ile gercek agirlik (kg) ve boyutlari (cm) bul\n3) Guven skoru ver (0-1)\n\n${hint ? 'Kullanici ipucu: ' + hint : ''}\n\nSADECE su JSON formatinda cevap ver (markdown YOK):\n{\n  \"product_name\": \"string\",\n  \"brand\": \"string veya null\",\n  \"model\": \"string veya null\",\n  \"category\": \"string\",\n  \"weight_kg\": number veya null,\n  \"length_cm\": number veya null,\n  \"width_cm\": number veya null,\n  \"height_cm\": number veya null,\n  \"confidence\": number,\n  \"notes\": \"string\"\n}`;\n\n  const res = await callGemini.call(this, [\n    { text: prompt },\n    { inline_data: { mime_type: mime, data: body.image } }\n  ]);\n\n  const parsed = parseJson(extractText(res));\n  if (!parsed) return [{ json: fail('AI cevabi JSON olarak cozumlenemedi.') }];\n\n  const final = {\n    product_name: parsed.product_name ?? null,\n    brand: parsed.brand ?? null,\n    model: parsed.model ?? null,\n    category: parsed.category ?? null,\n    weight_kg: parsed.weight_kg ?? null,\n    length_cm: parsed.length_cm ?? null,\n    width_cm: parsed.width_cm ?? null,\n    height_cm: parsed.height_cm ?? null,\n    confidence: parsed.confidence ?? 0.5,\n    notes: parsed.notes ?? null,\n    sources: extractSources(res),\n    error: false\n  };\n\n  return [{ json: final }];\n} catch (err) {\n  return [{ json: fail('n8n hatasi: ' + (err.message || String(err))) }];\n}"
+      },
+      "id": "code-gemini",
+      "name": "Gemini Analiz",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "respond-1",
+      "name": "Yanit Don",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        980,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Gemini Analiz",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini Analiz": {
+      "main": [
+        [
+          {
+            "node": "Yanit Don",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": []
+}

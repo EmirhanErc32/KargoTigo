@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin | KargoTigo</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="css/base.css?v=9" />
+    <link rel="stylesheet" href="css/components.css?v=8" />
+    <link rel="stylesheet" href="css/admin.css?v=3" />
+  </head>
+  <body class="admin-shell">
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="admin-sidebar-brand">
+        <span class="logo">T</span>
+        <div>
+          <strong>KargoTigo</strong>
+          <small>Yönetim Paneli</small>
+        </div>
+      </div>
+      <nav class="admin-nav" id="adminNav">
+        <button class="admin-nav-item active" data-section="overview" type="button">
+          <span class="admin-nav-icon">◉</span> Genel Görünüm
+        </button>
+        <button class="admin-nav-item" data-section="depot-create" type="button">
+          <span class="admin-nav-icon">＋</span> Depo Oluşturma
+        </button>
+        <button class="admin-nav-item" data-section="warehouses" type="button">
+          <span class="admin-nav-icon">▣</span> Depo İşlemleri
+        </button>
+        <button class="admin-nav-item" data-section="ai" type="button">
+          <span class="admin-nav-icon">◎</span> AI Kullanımı
+        </button>
+        <button class="admin-nav-item" data-section="users" type="button">
+          <span class="admin-nav-icon">◈</span> Kullanıcılar
+        </button>
+        <button class="admin-nav-item" data-section="courier" type="button">
+          <span class="admin-nav-icon">➤</span> G. Kurye İşlemleri
+        </button>
+        <button class="admin-nav-item" data-section="nakliyat" type="button">
+          <span class="admin-nav-icon">🚛</span> Nakliyat Siparişleri
+        </button>
+        <button class="admin-nav-item" data-section="nakliyeci-create" type="button">
+          <span class="admin-nav-icon">👷</span> Nakliyeci Yönetimi
+        </button>
+        <button class="admin-nav-item" data-section="kurye-create" type="button">
+          <span class="admin-nav-icon">🏍️</span> Kurye Yönetimi
+        </button>
+      </nav>
+      <div class="admin-sidebar-logins" id="adminLoginLog">
+        <h4>Son Girişler</h4>
+        <ul id="adminLoginList"></ul>
+      </div>
+      <div class="admin-sidebar-foot">
+        <button class="btn btn-outline btn-sm btn-block admin-logout-btn" id="adminLogout" type="button">Çıkış Yap</button>
+      </div>
+    </aside>
+
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div class="admin-topbar-left">
+          <button class="admin-mobile-toggle" id="adminMenuToggle" type="button" aria-label="Menü">☰</button>
+          <div>
+            <h1 id="adminPageTitle">Genel Görünüm</h1>
+            <p class="admin-topbar-sub" id="adminPageSub">Platform analizi</p>
+          </div>
+        </div>
+        <span class="admin-topbar-user" id="adminUserLabel">Admin</span>
+      </header>
+      <main class="admin-content">
+        <!-- Yükleme iskeleti — auth tamamlanana kadar gösterilir -->
+        <div id="adminLoading" class="admin-loading-skeleton">
+          <div class="ske-hero">
+            <div class="ske-block ske-h96"></div>
+          </div>
+          <div class="ske-charts">
+            <div class="ske-block ske-h200"></div>
+            <div class="ske-block ske-h200"></div>
+          </div>
+        </div>
+        <div id="adminDenied" class="admin-card admin-card-pad hidden">
+          <h2>Yetki gerekli</h2>
+          <p class="muted">Yalnızca admin erişebilir.</p>
+        </div>
+        <div id="adminApp" class="hidden">
+          <div id="adminContent"></div>
+        </div>
+      </main>
+    </div>
+    <script type="module" src="js/admin.js?v=4"></script>
+  </body>
+</html>

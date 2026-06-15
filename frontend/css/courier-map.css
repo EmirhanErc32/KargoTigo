@@ -1,0 +1,205 @@
+/* Sehir ici kargo — Istanbul haritasi */
+
+.courier-flow { display: flex; flex-direction: column; gap: 20px; }
+
+.courier-steps-bar {
+  display: flex;
+  gap: 0;
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 6px;
+  box-shadow: var(--shadow-sm);
+}
+.courier-flow-step {
+  flex: 1;
+  text-align: center;
+  padding: 12px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+}
+.courier-flow-step.active {
+  background: rgba(13, 148, 136, 0.1);
+  color: #0d9488;
+}
+.courier-flow-step.done { color: var(--success); }
+
+.courier-map-wrap {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
+  align-items: start;
+}
+#courierMap {
+  height: 480px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  z-index: 1;
+}
+.courier-map-side {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.courier-limits {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  padding: 14px 16px;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+.courier-limits strong { color: var(--navy); }
+
+.point-pick {
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--border);
+  background: var(--bg-white);
+}
+.point-pick.pickup { border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.04); }
+.point-pick.delivery { border-color: rgba(239, 68, 68, 0.35); background: rgba(239, 68, 68, 0.04); }
+.point-pick label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 4px;
+}
+.point-pick.pickup label { color: var(--success); }
+.point-pick.delivery label { color: var(--danger); }
+.point-pick strong { font-size: 14px; color: var(--navy); display: block; }
+.point-pick span { font-size: 12px; color: var(--text-muted); }
+
+.courier-distance {
+  text-align: center;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(13, 148, 136, 0.08), rgba(30, 94, 255, 0.06));
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(13, 148, 136, 0.2);
+}
+.courier-distance strong {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0d9488;
+  display: block;
+}
+.courier-distance.invalid strong { color: var(--danger); }
+
+.courier-clear-btn {
+  color: var(--danger);
+  border-color: rgba(239, 68, 68, 0.35);
+}
+.courier-clear-btn:hover {
+  background: rgba(239, 68, 68, 0.06);
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.courier-marker {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  display: grid !important;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+}
+.courier-marker.pickup { background: var(--success); }
+.courier-marker.delivery { background: var(--danger); }
+.courier-marker.hub { background: var(--blue); width: 22px !important; height: 22px !important; font-size: 9px; }
+.courier-marker.rider {
+  background: #0d9488;
+  width: 32px !important;
+  height: 32px !important;
+  font-size: 16px;
+  border-width: 2px;
+  z-index: 1000 !important;
+}
+
+.leaflet-popup-content { font-size: 13px; margin: 10px 14px; line-height: 1.4; }
+.leaflet-popup-content strong { color: var(--navy); }
+
+.courier-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.payment-box {
+  max-width: 480px;
+  margin: 0 auto;
+}
+.payment-summary {
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.payment-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.payment-row.total {
+  border-bottom: none;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--navy);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+.payment-card-mock {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  background: var(--bg-white);
+}
+
+.delivery-code-box {
+  text-align: center;
+  padding: 32px 24px;
+  background: linear-gradient(135deg, var(--navy), #1e3a6e);
+  border-radius: var(--radius);
+  color: #fff;
+  margin-top: 20px;
+}
+.delivery-code-box .code {
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  font-family: monospace;
+  margin: 16px 0;
+  padding: 16px 24px;
+  background: rgba(255,255,255,0.15);
+  border-radius: var(--radius-sm);
+  display: inline-block;
+  color: #ffffff;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+.delivery-code-box p { opacity: 0.85; font-size: 14px; max-width: 400px; margin: 0 auto; }
+
+.verify-box {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+}
+.verify-box h4 { font-size: 15px; margin-bottom: 12px; color: var(--navy); }
+
+@media (max-width: 900px) {
+  .courier-map-wrap { grid-template-columns: 1fr; }
+  #courierMap { height: 360px; }
+  .courier-form-grid { grid-template-columns: 1fr; }
+  .courier-flow-step span { display: none; }
+}

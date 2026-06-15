@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nakliyeci Paneli | KargoTigo</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="css/base.css?v=9" />
+    <link rel="stylesheet" href="css/components.css?v=8" />
+    <link rel="stylesheet" href="css/branch.css?v=5" />
+  </head>
+  <body class="panel-shell panel--mover">
+
+    <header class="panel-topbar">
+      <div class="panel-topbar-inner">
+        <a href="nakliyeci.html" class="panel-brand">
+          <div class="panel-brand-icon">🚚</div>
+          <div class="panel-brand-text">
+            <span class="panel-brand-name">KargoTigo</span>
+            <span class="panel-brand-sub">Nakliyat Paneli</span>
+          </div>
+        </a>
+        <div class="panel-topbar-right">
+          <div class="panel-user-badge">
+            <div class="panel-user-avatar">N</div>
+            <span class="panel-user-name" id="naklUserLabel">Nakliyeci</span>          </div>
+          <button class="panel-logout-btn" id="naklLogout" type="button">Çıkış Yap</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="panel-main">
+      <div id="naklDenied" class="card card-pad hidden">
+        <h2>Yetki gerekli</h2>
+        <p class="muted">Bu sayfaya yalnızca nakliyeci hesapları erişebilir.</p>
+        <a href="login.html" class="btn btn-primary">Giriş Sayfası</a>
+      </div>
+
+      <div id="naklApp" class="hidden">
+        <!-- Karşılama hero -->
+        <div class="panel-hero">
+          <div class="panel-hero-left">
+            <div class="panel-hero-avatar">N</div>
+            <div>
+              <div class="panel-hero-greeting">Hoş Geldiniz,</div>
+              <div class="panel-hero-name" id="naklTitle">Nakliyeci</div>
+              <div class="panel-hero-sub">Nakliyat görev paneli</div>
+            </div>
+          </div>
+          <div id="naklStats" class="panel-stats"></div>
+        </div>
+
+        <div id="naklTabs" class="panel-tabs"></div>
+        <div id="naklList" class="panel-list"></div>
+      </div>
+    </main>
+
+    <script type="module" src="js/nakliyeci.js?v=2"></script>
+  </body>
+</html>

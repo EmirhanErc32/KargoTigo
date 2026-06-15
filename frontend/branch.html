@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Depo Paneli | KargoTigo</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="css/base.css?v=9" />
+    <link rel="stylesheet" href="css/components.css?v=8" />
+    <link rel="stylesheet" href="css/branch.css?v=5" />
+  </head>
+  <body class="panel-shell panel--warehouse">
+
+    <header class="panel-topbar">
+      <div class="panel-topbar-inner">
+        <a href="branch.html" class="panel-brand">
+          <div class="panel-brand-icon">📦</div>
+          <div class="panel-brand-text">
+            <span class="panel-brand-name">KargoTigo</span>
+            <span class="panel-brand-sub">Depo Yönetimi</span>
+          </div>
+        </a>
+        <div class="panel-topbar-right">
+          <div class="panel-user-badge">
+            <div class="panel-user-avatar" id="branchAvatarInitial">D</div>
+            <span class="panel-user-name" id="branchUserLabel">Depo Yetkilisi</span>
+          </div>
+          <button class="panel-logout-btn" id="branchLogout" type="button">Çıkış Yap</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="panel-main">
+      <div id="branchDenied" class="card card-pad hidden">
+        <h2>Yetki gerekli</h2>
+        <p class="muted">Bu sayfaya yalnızca depo yetkilisi hesapları erişebilir.</p>
+        <a href="login.html" class="btn btn-primary">Giriş Sayfası</a>
+      </div>
+
+      <div id="branchApp" class="hidden">
+        <!-- Karşılama hero -->
+        <div class="panel-hero">
+          <div class="panel-hero-left">
+            <div class="panel-hero-avatar" id="branchAvatarHero">D</div>
+            <div>
+              <div class="panel-hero-greeting">Hoş Geldiniz,</div>
+              <div class="panel-hero-name" id="branchTitle">Depo Yetkilisi</div>
+              <div class="panel-hero-sub" id="branchSubtitle">Giriş / çıkış kod doğrulamaları</div>
+            </div>
+          </div>
+          <div id="branchStats" class="panel-stats"></div>
+        </div>
+
+        <div id="branchDepotBanner" class="panel-depot-banner hidden"></div>
+
+        <div id="branchTabs" class="panel-tabs"></div>
+        <div id="branchShipments" class="panel-list"></div>
+      </div>
+    </main>
+
+    <script type="module" src="js/branch.js?v=6"></script>
+  </body>
+</html>

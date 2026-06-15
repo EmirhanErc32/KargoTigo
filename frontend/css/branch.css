@@ -1,0 +1,685 @@
+/* ================================================================
+   KargoTigo — Panel CSS v5   (branch.css)
+   Depo · Kurye · Nakliyeci panelleri
+   ================================================================ */
+
+/* ── Tema tokenları ────────────────────────────────────────────── */
+.panel--warehouse {
+  --p:      #1a56db;
+  --p-dark: #1241a8;
+  --p-light:#dbeafe;
+  --accent: #f59e0b;
+  --bg:     #eef2fb;
+  --hfrom:  #0f2d73;
+  --hto:    #1a56db;
+}
+.panel--courier {
+  --p:      #dc4b0e;
+  --p-dark: #0f172a;
+  --p-light:#ffedd5;
+  --accent: #f97316;
+  --bg:     #fdf5f0;
+  --hfrom:  #0f172a;
+  --hto:    #2d1a0a;
+}
+.panel--mover {
+  --p:      #7c3aed;
+  --p-dark: #4c1d95;
+  --p-light:#ede9fe;
+  --accent: #10b981;
+  --bg:     #f4f0ff;
+  --hfrom:  #2e1065;
+  --hto:    #5b21b6;
+}
+
+/* ── Reset / base ─────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+.panel-shell {
+  min-height: 100vh;
+  background: var(--bg);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: #1a202c;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Top bar ──────────────────────────────────────────────────── */
+.panel-topbar {
+  background: linear-gradient(135deg, var(--hfrom) 0%, var(--hto) 100%);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  box-shadow: 0 4px 20px rgba(0,0,0,.25);
+}
+
+.panel-topbar-inner {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.panel-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  flex: 1;
+  min-width: 0;
+}
+
+.panel-brand-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.18);
+  border: 1.5px solid rgba(255,255,255,.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  backdrop-filter: blur(4px);
+}
+
+.panel-brand-text { display: flex; flex-direction: column; gap: 1px; }
+.panel-brand-name { color: #fff; font-weight: 800; font-size: 16px; letter-spacing: -.4px; }
+.panel-brand-sub  { color: rgba(255,255,255,.6); font-size: 11px; font-weight: 500; }
+
+.panel-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.panel-user-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 24px;
+  padding: 5px 14px 5px 6px;
+  backdrop-filter: blur(8px);
+}
+
+.panel-user-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.28);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.panel-user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.panel-logout-btn {
+  background: rgba(255,255,255,.14);
+  border: 1.5px solid rgba(255,255,255,.3);
+  color: rgba(255,255,255,.9);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all .15s;
+  letter-spacing: -.2px;
+}
+.panel-logout-btn:hover {
+  background: rgba(255,255,255,.24);
+  color: #fff;
+}
+
+/* ── Main ─────────────────────────────────────────────────────── */
+.panel-main {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 28px 24px 72px;
+}
+
+/* ── Panel hero ───────────────────────────────────────────────── */
+.panel-hero {
+  background: linear-gradient(135deg, var(--hfrom) 0%, var(--hto) 100%);
+  border-radius: 20px;
+  padding: 28px 28px 20px;
+  margin-bottom: 22px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.18);
+  position: relative;
+  overflow: hidden;
+}
+.panel-hero::before {
+  content: "";
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  background: rgba(255,255,255,.06);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.panel-hero::after {
+  content: "";
+  position: absolute;
+  bottom: -40px; left: 40px;
+  width: 140px; height: 140px;
+  background: rgba(255,255,255,.04);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.panel-hero-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.panel-hero-avatar {
+  width: 60px; height: 60px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.2);
+  border: 2px solid rgba(255,255,255,.35);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+  font-weight: 900;
+  color: #fff;
+  flex-shrink: 0;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(0,0,0,.2);
+}
+
+.panel-hero-greeting {
+  font-size: 13px;
+  color: rgba(255,255,255,.65);
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.panel-hero-name {
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -.5px;
+  line-height: 1.1;
+  margin-bottom: 3px;
+}
+
+.panel-hero-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,.55);
+  font-weight: 400;
+}
+
+.panel-hero .panel-stats {
+  margin-bottom: 0;
+}
+
+.panel-hero .panel-stat {
+  background: rgba(255,255,255,.12);
+  border-color: rgba(255,255,255,.18);
+  backdrop-filter: blur(8px);
+  box-shadow: none;
+}
+.panel-hero .panel-stat::before {
+  display: none;
+}
+.panel-hero .panel-stat:hover {
+  background: rgba(255,255,255,.18);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,.15);
+}
+.panel-hero .panel-stat-icon {
+  background: rgba(255,255,255,.18) !important;
+}
+.panel-hero .panel-stat-body strong { color: #fff; }
+.panel-hero .panel-stat-body span   { color: rgba(255,255,255,.7); }
+
+@media (max-width: 640px) {
+  .panel-hero { padding: 20px 18px 16px; }
+  .panel-hero-name { font-size: 20px; }
+  .panel-hero .panel-stats { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── Depot banner ─────────────────────────────────────────────── */
+.panel-depot-banner {
+  background: #fff;
+  border-radius: 16px;
+  padding: 18px 22px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+  border: 1.5px solid rgba(0,0,0,.06);
+}
+.panel-depot-banner.hidden { display: none; }
+
+.panel-depot-icon {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--hfrom), var(--hto));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0,0,0,.15);
+}
+
+.panel-depot-info h2 {
+  font-size: 17px; font-weight: 700; color: #1a202c; margin-bottom: 2px;
+}
+.panel-depot-info p { font-size: 13px; color: #64748b; }
+
+/* ── Sayfa başlığı ─────────────────────────────────────────────── */
+.panel-page-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 4px;
+  letter-spacing: -.5px;
+}
+.panel-page-sub {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 24px;
+  font-weight: 400;
+}
+
+/* ── İstatistik kartları ──────────────────────────────────────── */
+.panel-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.panel-stat {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  border: 1.5px solid transparent;
+  position: relative;
+  overflow: hidden;
+  transition: transform .15s, box-shadow .15s;
+}
+.panel-stat::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.panel-stat:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.10); }
+
+.panel-stat--warn  { border-color: #fde68a; }
+.panel-stat--warn::before  { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+.panel-stat--blue  { border-color: #bfdbfe; }
+.panel-stat--blue::before  { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+.panel-stat--green { border-color: #bbf7d0; }
+.panel-stat--green::before { background: linear-gradient(90deg, #10b981, #34d399); }
+.panel-stat--orange{ border-color: #fed7aa; }
+.panel-stat--orange::before{ background: linear-gradient(90deg, #f97316, #fb923c); }
+
+.panel-stat-icon {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.panel-stat--warn  .panel-stat-icon { background: #fef9c3; }
+.panel-stat--blue  .panel-stat-icon { background: #dbeafe; }
+.panel-stat--green .panel-stat-icon { background: #dcfce7; }
+.panel-stat--orange .panel-stat-icon { background: #ffedd5; }
+
+.panel-stat-body strong {
+  display: block;
+  font-size: 32px;
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1;
+  letter-spacing: -1px;
+  margin-bottom: 4px;
+}
+.panel-stat-body span {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+
+/* ── Sekmeler ─────────────────────────────────────────────────── */
+.panel-tabs {
+  display: flex;
+  gap: 6px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 6px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+  border: 1.5px solid rgba(0,0,0,.06);
+}
+
+.panel-tab {
+  all: unset;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  cursor: pointer;
+  transition: all .18s cubic-bezier(.4,0,.2,1);
+  white-space: nowrap;
+  text-align: center;
+}
+
+.panel-tab:hover:not(.active) { background: #f8fafc; color: #374151; }
+
+.panel-tab.active {
+  background: var(--p);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0,0,0,.2);
+}
+
+.panel-tab-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: rgba(0,0,0,.1);
+  color: inherit;
+  min-width: 20px;
+  text-align: center;
+}
+.panel-tab.active .panel-tab-badge { background: rgba(255,255,255,.25); }
+
+/* ── Boş durum ────────────────────────────────────────────────── */
+.panel-empty {
+  padding: 56px 24px;
+  background: #fff;
+  border-radius: 16px;
+  text-align: center;
+  border: 2px dashed #e2e8f0;
+}
+.panel-empty-icon { font-size: 48px; margin-bottom: 14px; display: block; }
+.panel-empty h3   { font-size: 17px; font-weight: 700; color: #374151; margin-bottom: 6px; }
+.panel-empty p    { font-size: 14px; color: #94a3b8; line-height: 1.5; }
+
+/* ── Kart ─────────────────────────────────────────────────────── */
+.panel-item {
+  background: #fff;
+  border-radius: 16px;
+  border: 1.5px solid #e8ecf2;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,.05);
+  transition: box-shadow .18s, transform .18s;
+}
+.panel-item:hover {
+  box-shadow: 0 8px 28px rgba(0,0,0,.09);
+  transform: translateY(-1px);
+}
+
+.panel-item-accent {
+  height: 4px;
+  background: linear-gradient(90deg, var(--hfrom), var(--hto));
+}
+
+.panel-item-head {
+  padding: 18px 22px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.panel-item-head-main { flex: 1; min-width: 0; }
+
+.panel-item-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 4px;
+  word-break: break-all;
+}
+
+.panel-item-sub {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.panel-item-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+
+/* ── Badge ────────────────────────────────────────────────────── */
+.panel-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+  letter-spacing: .1px;
+}
+.panel-badge--warn   { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+.panel-badge--blue   { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+.panel-badge--green  { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+.panel-badge--gray   { background: #f8fafc; color: #475569; border: 1px solid #e2e8f0; }
+.panel-badge--orange { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+
+/* ── Kart body ────────────────────────────────────────────────── */
+.panel-item-body { padding: 18px 22px 22px; }
+
+/* ── Kişi kutuları ────────────────────────────────────────────── */
+.panel-parties {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.panel-party-box {
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.panel-party-sender    { background: #f0f9ff; border: 1.5px solid #bae6fd; }
+.panel-party-recipient { background: #f0fdf4; border: 1.5px solid #bbf7d0; }
+
+.panel-party-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .7px;
+  margin-bottom: 8px;
+}
+.panel-party-sender .panel-party-label    { color: #0369a1; }
+.panel-party-recipient .panel-party-label { color: #166534; }
+
+.panel-party-name    { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+.panel-party-phone   { font-size: 13px; color: #475569; font-weight: 500; margin-bottom: 4px; }
+.panel-party-address { font-size: 12px; color: #64748b; line-height: 1.5; }
+
+/* ── Detay grid ───────────────────────────────────────────────── */
+.panel-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px 20px;
+  margin-bottom: 16px;
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 14px 16px;
+  border: 1px solid #edf2f7;
+}
+.panel-detail-grid div { display: flex; flex-direction: column; gap: 3px; }
+.panel-detail-grid dt {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .5px; color: #94a3b8;
+}
+.panel-detail-grid dd {
+  font-size: 13px; font-weight: 600; color: #374151; margin: 0;
+}
+
+/* ── Doğrulama bölümü ─────────────────────────────────────────── */
+.panel-verify {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 2px solid #7dd3fc;
+  border-radius: 16px;
+  padding: 20px 22px;
+}
+.panel--warehouse .panel-verify { background: linear-gradient(135deg, #eff6ff, #dbeafe); border-color: #93c5fd; }
+.panel--courier   .panel-verify { background: linear-gradient(135deg, #fff7ed, #ffedd5); border-color: #fdba74; }
+.panel--mover     .panel-verify { background: linear-gradient(135deg, #f5f3ff, #ede9fe); border-color: #c4b5fd; }
+
+.panel-verify-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.panel-verify-hint {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+.panel-verify-hint strong { color: #0f172a; }
+
+.panel-verify-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.panel-verify-input {
+  flex: 1;
+  height: 48px;
+  border: 2px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 0 18px;
+  font-size: 20px;
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  letter-spacing: 6px;
+  text-align: center;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+  background: #fff;
+  color: #0f172a;
+}
+.panel-verify-input:focus {
+  border-color: var(--p);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--p) 15%, transparent);
+}
+.panel-verify-input::placeholder { color: #cbd5e1; letter-spacing: 3px; font-size: 16px; }
+
+.panel-verify-btn {
+  height: 48px;
+  padding: 0 22px;
+  background: var(--p);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .18s;
+  white-space: nowrap;
+  box-shadow: 0 4px 14px rgba(0,0,0,.2);
+  letter-spacing: -.2px;
+}
+.panel-verify-btn:hover   { filter: brightness(1.08); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+.panel-verify-btn:active  { transform: translateY(0); filter: brightness(.96); }
+.panel-verify-btn:disabled { opacity: .55; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.panel-verify-msg {
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  display: none;
+}
+.panel-verify-msg:not(:empty) { display: block; }
+.panel-verify-msg.ok  { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+.panel-verify-msg.err { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+/* ── Done row ─────────────────────────────────────────────────── */
+.panel-done-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: #f0fdf4;
+  border-radius: 12px;
+  border: 1.5px solid #bbf7d0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #166534;
+}
+
+/* ── Kart listesi ─────────────────────────────────────────────── */
+.panel-list { display: flex; flex-direction: column; gap: 14px; }
+
+/* ── JS uyum (eski class adları) ──────────────────────────────── */
+.branch-item  { }
+.branch-tab   { }
+.branch-code  { }
+.branch-verify-btn { }
+.branch-verify-msg { }
+.nakl-verify-btn   { }
+.nakl-code         { }
+
+/* ── Responsive ───────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .panel-topbar-inner { padding: 0 16px; }
+  .panel-user-badge   { display: none; }
+  .panel-main         { padding: 18px 14px 56px; }
+  .panel-stats        { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .panel-stat-body strong { font-size: 26px; }
+  .panel-parties      { grid-template-columns: 1fr; }
+  .panel-detail-grid  { grid-template-columns: 1fr 1fr; }
+  .panel-verify-row   { flex-direction: column; align-items: stretch; }
+  .panel-verify-input { font-size: 18px; letter-spacing: 4px; }
+  .panel-verify-btn   { height: 44px; }
+  .panel-item-head    { flex-direction: column; gap: 10px; }
+}
+
+@media (max-width: 420px) {
+  .panel-stats { grid-template-columns: 1fr; }
+  .panel-detail-grid { grid-template-columns: 1fr; }
+  .panel-tabs  { flex-wrap: wrap; }
+  .panel-tab   { flex: 0 1 calc(50% - 3px); font-size: 12px; padding: 9px 8px; }
+  .panel-page-title { font-size: 22px; }
+}

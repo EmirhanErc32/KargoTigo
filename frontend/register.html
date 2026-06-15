@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta name="color-scheme" content="light" />
+    <title>Kayıt Ol | KargoTigo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="css/base.css?v=3" />
+    <link rel="stylesheet" href="css/components.css?v=3" />
+    <link rel="stylesheet" href="css/app.css?v=13" />
+    <link rel="stylesheet" href="css/consultant.css?v=8" />
+  </head>
+  <body class="auth-page">
+    <div class="auth-panel auth-panel-left">
+      <a href="index.html" class="brand">
+        <span class="logo">T</span>
+        <span>KargoTigo</span>
+      </a>
+      <h2>Ücretsiz Hesap<br />Oluşturun</h2>
+      <p>
+        Dakikalar içinde kayıt olun ve yapay zeka destekli kargo analiz
+        platformunu kullanmaya başlayın.
+      </p>
+      <div class="auth-features">
+        <div class="auth-feature">
+          <span class="auth-feature-icon">⚡</span>
+          <span>Anında kayıt, anında kullanım</span>
+        </div>
+        <div class="auth-feature">
+          <span class="auth-feature-icon">📊</span>
+          <span>Analiz geçmişi kaydı</span>
+        </div>
+        <div class="auth-feature">
+          <span class="auth-feature-icon">🚚</span>
+          <span>11+ kargo firması karşılaştırması</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-panel auth-panel-right">
+      <div class="auth-form-wrap">
+        <a href="index.html" class="auth-back">← Ana Sayfa</a>
+        <h1>Kayıt Ol</h1>
+        <p class="subtitle">Ücretsiz hesap oluştürün ve hemen başlayın.</p>
+
+        <form id="authForm">
+          <div class="field">
+            <label for="fullName">Ad Soyad</label>
+            <input class="input" type="text" id="fullName" placeholder="Adınız Soyadınız" required minlength="2" />
+          </div>
+          <div class="field">
+            <label for="email">E-posta</label>
+            <input class="input" type="email" id="email" placeholder="ornek@mail.com" required />
+          </div>
+          <div class="field">
+            <label for="password">Şifre</label>
+            <input
+              class="input"
+              type="password"
+              id="password"
+              placeholder="En az 6 karakter"
+              minlength="6"
+              required
+            />
+          </div>
+          <button class="btn btn-primary btn-block" id="submitBtn" type="submit">Hesap Oluştur</button>
+        </form>
+
+        <p class="auth-switch">
+          Zaten hesabınız var mı? <a href="login.html">Giriş Yap</a>
+        </p>
+      </div>
+    </div>
+
+    <script type="module">
+      import { $, toast, setLoading } from "./js/ui.js";
+      import { register, saveSession, isLoggedIn } from "./js/auth.js";
+
+      if (isLoggedIn()) window.location.href = "app.html";
+
+      const form = $("#authForm");
+      const submitBtn = $("#submitBtn");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        setLoading(submitBtn, true, "Hesap Oluştur");
+        try {
+          const res = await register(
+            $("#email").value.trim(),
+            $("#password").value,
+            $("#fullName").value.trim()
+          );
+          saveSession({ token: res.token, user: res.user });
+          toast("Kayıt başarılı! Yönlendiriliyorsunuz...", "ok");
+          setTimeout(() => (window.location.href = "app.html"), 500);
+        } catch (err) {
+          toast(err.message, "err");
+          setLoading(submitBtn, false, "Hesap Oluştur");
+        }
+      });
+    </script>
+    <script type="module">
+      import { initConsultant } from "./js/consultant.js?v=2";
+      initConsultant();
+    </script>
+  </body>
+</html>
